@@ -1,105 +1,110 @@
-import csv 
+# Definição de estruturas de dados
 
-# Definição das classes principais
+artistas = []
+estilos = []
+obras = []
+emprestimos = []
+visitas_guiadas = []
 
-class Artista:
-    def __init__(self, nome, data_nascimento, local_nascimento, biografia, estilos):
-        self.nome = nome
-        self.data_nascimento = data_nascimento
-        self.local_nascimento = local_nascimento
-        self.biografia = biografia
-        self.estilos = estilos  # lista de estilos associados ao artista
+# Funções auxiliares
 
-class EstiloArtistico:
-    def __init__(self, denominacao, periodo, caracteristicas, escola):
-        self.denominacao = denominacao
-        self.periodo = periodo
-        self.caracteristicas = caracteristicas
-        self.escola = escola
+def cadastrar_artista(nome, data_nascimento, local_nascimento, biografia, estilos):
+    artistas.append({
+        "nome": nome,
+        "data_nascimento": data_nascimento,
+        "local_nascimento": local_nascimento,
+        "biografia": biografia,
+        "estilos": estilos
+    })
 
-class ObraDeArte:
-    def __init__(self, titulo, data_criacao, tema, estilo, descricao, tecnica, autor, localizacao):
-        self.titulo = titulo
-        self.data_criacao = data_criacao
-        self.tema = tema
-        self.estilo = estilo
-        self.descricao = descricao
-        self.tecnica = tecnica
-        self.autor = autor
-        self.localizacao = localizacao
-        self.documentos = []  # lista de documentos associados
-        self.figura_historica = None  # figura histórica associada, se houver
+def cadastrar_estilo(denominacao, periodo, caracteristicas, escola):
+    estilos.append({
+        "denominacao": denominacao,
+        "periodo": periodo,
+        "caracteristicas": caracteristicas,
+        "escola": escola
+    })
 
-class Documento:
-    def __init__(self, tipo, descricao):
-        self.tipo = tipo
-        self.descricao = descricao
+def cadastrar_obra(titulo, data_criacao, tema, estilo, descricao, tecnica, autor, localizacao):
+    obras.append({
+        "titulo": titulo,
+        "data_criacao": data_criacao,
+        "tema": tema,
+        "estilo": estilo,
+        "descricao": descricao,
+        "tecnica": tecnica,
+        "autor": autor,
+        "localizacao": localizacao,
+        "documentos": [],
+        "figura_historica": None
+    })
 
-class FiguraHistorica:
-    def __init__(self, nome, descricao):
-        self.nome = nome
-        self.descricao = descricao
+def associar_documento_a_obra(obra, tipo, descricao):
+    obra["documentos"].append({
+        "tipo": tipo,
+        "descricao": descricao
+    })
 
-class Emprestimo:
-    def __init__(self, obra, periodo_emprestimo, nome_evento, responsavel, tema):
-        self.obra = obra
-        self.periodo_emprestimo = periodo_emprestimo
-        self.nome_evento = nome_evento
-        self.responsavel = responsavel
-        self.tema = tema
+def associar_figura_historica_a_obra(obra, nome, descricao):
+    obra["figura_historica"] = {
+        "nome": nome,
+        "descricao": descricao
+    }
 
-class VisitaGuiada:
-    def __init__(self, tema, descricao, obras):
-        self.tema = tema
-        self.descricao = descricao
-        self.obras = obras  # lista de obras na visita guiada
+def registrar_emprestimo(obra, periodo_emprestimo, nome_evento, responsavel, tema):
+    emprestimos.append({
+        "obra": obra,
+        "periodo_emprestimo": periodo_emprestimo,
+        "nome_evento": nome_evento,
+        "responsavel": responsavel,
+        "tema": tema
+    })
 
-# Funções para operações específicas
+def criar_visita_guiada(tema, descricao, obras_visitadas):
+    visitas_guiadas.append({
+        "tema": tema,
+        "descricao": descricao,
+        "obras_visitadas": obras_visitadas
+    })
 
-def salvar_obras_csv(obras, nome_arquivo):
-    with open(nome_arquivo, mode='w', newline='', encoding='utf-8') as file:
-        writer = csv.writer(file)
-        writer.writerow(["Título", "Data de Criação", "Tema", "Estilo", "Descrição", "Técnica", "Autor", "Localização"])
-        for obra in obras:
-            writer.writerow([obra.titulo, obra.data_criacao, obra.tema, obra.estilo.denominacao,
-                             obra.descricao, obra.tecnica, obra.autor.nome, obra.localizacao])
+def ordenar_obras_por_titulo():
+    obras.sort(key=lambda x: x["titulo"])
 
-# Exemplo de utilização
+# Exemplo de utilização das funções
 
 if __name__ == "__main__":
-    # Criando um artista
-    artista1 = Artista("Leonardo da Vinci", "15/04/1452", "Vinci, Itália",
-                       "Leonardo da Vinci foi um dos maiores artistas do Renascimento...",
-                       ["Renascimento", "Alta Renascença"])
+    # Cadastrando um artista
+    cadastrar_artista("Leonardo da Vinci", "15/04/1452", "Vinci, Itália",
+                      "Leonardo da Vinci foi um dos maiores artistas do Renascimento...",
+                      ["Renascimento", "Alta Renascença"])
 
-    # Criando um estilo artístico
-    estilo1 = EstiloArtistico("Renascimento", "Séculos XIV a XVII",
-                              "Valorização da razão, ciência e humanismo. Uso de perspectiva e naturalismo.",
-                              "Escola Florentina")
+    # Cadastrando um estilo artístico
+    cadastrar_estilo("Renascimento", "Séculos XIV a XVII",
+                     "Valorização da razão, ciência e humanismo. Uso de perspectiva e naturalismo.",
+                     "Escola Florentina")
 
-    # Criando uma obra de arte
-    obra1 = ObraDeArte("Mona Lisa", "1503-1506", "Retrato", estilo1, "A Mona Lisa é um retrato renascentista famoso...",
-                       "Óleo sobre madeira", artista1, "Sala 4, Ala A")
+    # Cadastrando uma obra de arte
+    cadastrar_obra("Mona Lisa", "1503-1506", "Retrato", "Renascimento",
+                   "A Mona Lisa é um retrato renascentista famoso...",
+                   "Óleo sobre madeira", "Leonardo da Vinci", "Sala 4, Ala A")
 
     # Associando um documento à obra
-    documento1 = Documento("Fotografia", "Fotografia da Mona Lisa durante restauração")
-    obra1.documentos.append(documento1)
+    associar_documento_a_obra(obras[0], "Fotografia", "Fotografia da Mona Lisa durante restauração")
 
-    # Criando uma figura histórica associada à obra
-    figura1 = FiguraHistorica("Lisa Gherardini", "Lisa Gherardini foi uma nobre florentina, esposa de Francesco del Giocondo...")
-    obra1.figura_historica = figura1
+    # Associando uma figura histórica à obra
+    associar_figura_historica_a_obra(obras[0], "Lisa Gherardini", "Lisa Gherardini foi uma nobre florentina...")
 
-    # Registrar empréstimo de obra
-    emprestimo1 = Emprestimo(obra1, "01/07/2024 - 15/08/2024", "Exposição Internacional de Artes", "Curador X",
-                             "Retratos Renascentistas")
+    # Registrando um empréstimo de obra
+    registrar_emprestimo(obras[0], "01/07/2024 - 15/08/2024", "Exposição Internacional de Artes", "Curador X",
+                         "Retratos Renascentistas")
 
-    # Criar uma visita guiada
-    visita_guiada1 = VisitaGuiada("O Renascimento em Florença", "Descubra o movimento artístico que transformou a arte europeia...",
-                                  [obra1])
+    # Criando uma visita guiada
+    criar_visita_guiada("O Renascimento em Florença", "Descubra o movimento artístico que transformou a arte europeia...",
+                        [obras[0]])
 
-    # Exemplo de ordenação de obras por título
-    obras = [obra1]
-    obras.sort(key=lambda x: x.titulo)
+    # Ordenando obras por título
+    ordenar_obras_por_titulo()
 
-    # Exemplo de salvar obras em CSV
-    salvar_obras_csv([obra1], "obras.csv")
+    # Exibindo as obras ordenadas
+    for obra in obras:
+        print(f"Título: {obra['titulo']}, Autor: {obra['autor']}, Estilo: {obra['estilo']}, Localização: {obra['localizacao']}")

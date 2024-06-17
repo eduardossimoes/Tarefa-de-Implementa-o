@@ -1,4 +1,3 @@
-# Tarefa-de-Implementa-o
 import csv
 
 class Artista:
